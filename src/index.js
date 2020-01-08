@@ -1,11 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Message from './js/Message'
-
-import './css/style.css'
+import Main from './js/Main'
 
 ReactDOM.render(
-  <Message />,
+  <Main />,
   document.getElementById('react-container') // eslint-disable-line no-undef
 )
 
