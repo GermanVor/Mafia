@@ -80,39 +80,53 @@ io.sockets.on('connection', function(socket) {
 	console.log('Подключился пользователь ' + socket.id);
 	// Добавление нового соединения в массив
 	socket.on('change-username', function(name, callback) {
+		//поменять ник можно однажды, это конвенционально 
+		if( Boolean(socket.username) ) return
 		if( connections.find( el => el.username === name) === undefined ) {
 			connections.push(socket);
 
 			console.log('Пользователь (id) ' + socket.id + ' изменил ник на ' + name) 
 
 			socket.username = name;
-			socket.join('Living room');
+			socket.join('Living room', function(){
+				console.log('Пользователь (id) '+ socket.id + ' вошел в Living room')
+				GetRoom('Living room').history.push({mess: 'Пользователь ' + name + ' вошел в комнату', date: new Date()});
+				socket.broadcast.to('Living room').emit('JoinRoom', socket.username + ' вошел в комнату');
+			});
 			callback({res: true, mess: 'Имя изменено'});
 		} else callback({ res: false, mess: 'Имя уже занято' });
 	});
 
 	socket.on('create-room', ( RoomName, callback ) => { 
+		//проверка на ник нейм 
+		if( !Boolean(socket.username) ) return
 		if( GetRoom(RoomName) === undefined ) {
 			CreateRoom(RoomName, socket.username)
 			//не хватает всяких обработок ошибок и сообщний , но мне лень 
-			socket.join(RoomName, 
+			socket.join(RoomName, function(){
+				console.log('Пользователь (id) ' + socket.id + ' создал комнату ' + RoomName)
 				callback({ res: true, mess: 'Комната успешно создана' })
-			);
+			});
 		}
 		else callback({ res: false, mess: 'Комната с таким именем уже существует' });
 	});
 
 	socket.on('join-room', ( RoomName, callback ) => {
+		//проверка на ник нейм 
+		if( !Boolean(socket.username) ) return
 		let room = GetRoom(RoomName);
 		if( room !== undefined){
 			socket.join(RoomName, function(){
-				room.history.push({mess: 'Пользователь ' + socket.username + ' вошел в комнату:' + new Date()});
-				socket.broadcast.to(RoomName).emit('JoinRoom', socket.username + ' вошел в комнату');
+				let date = new Date()
+				room.history.push({mess: 'Пользователь ' + socket.username + ' вошел в комнату', date });
+				socket.broadcast.to(RoomName).emit('JoinRoom', {mess: socket.username + ' вошел в комнату', date  });
 			});
 		} else callback({ res: false, mess: 'Не удалось присоединиться к комнате' })
 	});
 
 	socket.on('leave-room', ( RoomName ) => {
+		//проверка на ник нейм 
+		if( !Boolean(socket.username) ) return
 		let room = GetRoom(RoomName); 
 		if( room ){
 			socket.leave(RoomName, function(){
@@ -123,8 +137,11 @@ io.sockets.on('connection', function(socket) {
 	});
 	
 	socket.on('mess', function({ RoomName, mess }) {
+		//проверка на ник нейм 
+		if( !Boolean(socket.username) ) return
 		socket.broadcast.to(RoomName).emit('new-mess', {mess: mess, author: socket.username});
 		//сами сообщения не будем хранить на сервере
+		// и ответы отправителю тоже отправлять не станем 
 	});
 	// Функция, которая срабатывает при отключении от сервера
 	socket.on('disconnect', function() {
