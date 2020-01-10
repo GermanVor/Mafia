@@ -136,14 +136,15 @@ io.sockets.on('connection', function(socket) {
 		let room = GetRoom(RoomName); 
 		if( room ){
 			socket.leave(RoomName, function(){
-				callback({res: true, mess:'Вы покинули комнату '+RoomName})
+				connections.splice(connections.indexOf(RoomName), 1);
+				callback({res: true, mess:'Вы покинули комнату '+RoomName});
 				room.history.push({mess: 'Пользователь ' + socket.username + ' покинул комнату:' + new Date()});
 				socket.broadcast.to(RoomName).emit('LeaveRoom', socket.username );
 			});
 		} else callback({res: false, mess: 'Такой комнаты '+RoomName+' не существует'})
 	});
 	
-	socket.on('mess', function({ RoomName, mess }, callback) {
+	socket.on('mess', function({ RoomName, mess }, callback){
 		//проверка на ник нейм 
 		if( !Boolean(socket.username) ) return;
 		//проверка на существовании в комнате 
@@ -157,7 +158,7 @@ io.sockets.on('connection', function(socket) {
 		// и ответы отправителю тоже отправлять не станем 
 	});
 	// Функция, которая срабатывает при отключении от сервера
-	socket.on('disconnect', function() {
+	socket.on('disconnect', function(){
 		// Удаления пользователя из массива
 		socket.Rooms.forEach(el => {
 			socket.broadcast.to(el).emit('LeaveRoom', socket.username );
