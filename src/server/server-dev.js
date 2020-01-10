@@ -34,13 +34,6 @@ app.get('/', (req, res, next) => {
   })
 });
 
-//const PORT = process.env.PORT || 8080;
-
-// app.listen(PORT, () => {
-//     console.log(`App listening to ${PORT}....`)
-//     console.log('Press Ctrl+C to quit.')
-// })
-
 const io = require('socket.io').listen(server);
 
 let connections = [];
@@ -91,7 +84,7 @@ io.sockets.on('connection', function(socket) {
 			socket.join('Living room', function(){
 				console.log('Пользователь (id) '+ socket.id + ' вошел в Living room')
 				GetRoom('Living room').history.push({mess: 'Пользователь ' + name + ' вошел в комнату', date: new Date()});
-				socket.broadcast.to('Living room').emit('JoinRoom', socket.username + ' вошел в комнату');
+				socket.broadcast.to('Living room').emit('JoinRoom', socket.username );
 			});
 			callback({res: true, mess: 'Имя изменено'});
 		} else callback({ res: false, mess: 'Имя уже занято' });
@@ -117,7 +110,7 @@ io.sockets.on('connection', function(socket) {
 		let room = GetRoom(RoomName);
 		if( room !== undefined){
 			socket.join(RoomName, function(){
-				let date = new Date()
+				let date = new Date();
 				room.history.push({mess: 'Пользователь ' + socket.username + ' вошел в комнату', date });
 				socket.broadcast.to(RoomName).emit('JoinRoom', {mess: socket.username + ' вошел в комнату', date  });
 			});
@@ -136,9 +129,11 @@ io.sockets.on('connection', function(socket) {
 		}
 	});
 	
-	socket.on('mess', function({ RoomName, mess }) {
+	socket.on('mess', function({ RoomName, mess }, callback) {
 		//проверка на ник нейм 
-		if( !Boolean(socket.username) ) return
+		if( !Boolean(socket.username) ) return;
+
+		callback({ mess: 'Сообщение доставлено', res: true, date: new Date() })
 		socket.broadcast.to(RoomName).emit('new-mess', {mess: mess, author: socket.username});
 		//сами сообщения не будем хранить на сервере
 		// и ответы отправителю тоже отправлять не станем 
