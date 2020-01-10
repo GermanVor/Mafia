@@ -17,7 +17,7 @@ class MessBox extends Component {
             <button type="button" className="btn btn-outline-secondary Invite" >Пригласить</button> 
           </div>
           <div>
-            <button style={{float: 'right', fontSize: '0.8em', padding: '3px 8px 3px 8px'}} type="button" className="btn btn-outline-secondary">Участники</button>
+            <button style={{float: 'right', fontSize: '0.8em', padding: '3px 8px 3px 8px'}} type="button" className="btn btn-outline-secondary GetMembers">Участники</button>
             <div className="d-print-none">{'Имя комнаты '+ this.props.RoomName }</div>
             <hr align="center" width="250px" size="5" color="Red" margin='auto'/>
           </div>
@@ -52,9 +52,7 @@ class MessBox extends Component {
     let name = this.props.username;
     let AddMess = this.AddMess;
     
-    console.log(socket)
-
-    MessForm.onsubmit = function(event) {
+    MessForm.onsubmit = function(event){
       event.preventDefault();
       let mess = MessForm.elements.message.value.trim();
       if(mess !== '' && mess.length <= 100) socket.emit('mess', { RoomName, mess }, function(data){
@@ -64,7 +62,7 @@ class MessBox extends Component {
         } else console.log('Сообщение не доставлено');
       });
       MessForm.elements.message.value = '';
-    }
+    };
 
     socket.on('new-mess',(data)=>AddMess(data));
 
@@ -80,8 +78,19 @@ class MessBox extends Component {
           DellMessBox(RoomName)
         } else console.log('Не удалось покинуть комнату')
       })
+    };
+
+    document.querySelector('button.GetMembers').onclick = function(){
+      socket.emit('get-members', RoomName, function(data){
+        
+      });
     }
-  };
+    
+
+  }
+
+
+
 }
 
 export default MessBox

@@ -144,6 +144,25 @@ io.sockets.on('connection', function(socket) {
 		} else callback({res: false, mess: 'Такой комнаты '+RoomName+' не существует'})
 	});
 	
+	socket.on('get-members', function( RoomName, callback){
+		//проверка на ник нейм 
+		if( !Boolean(socket.username) ) return;
+		//проверка на существовании в комнате 
+		if( !Boolean(socket.Rooms.find((e) => e === RoomName )) ){
+			callback({ res: false, mess: 'Вы не состоите в комнате: ' + RoomName});
+			return;
+		}
+		
+		let arr = [];
+		let obj = io.sockets.adapter.rooms[RoomName].sockets;
+		
+		for( let id in obj){
+			arr.push( io.sockets.sockets[id].username );
+		}
+		
+		callback( arr );
+	});
+	
 	socket.on('mess', function({ RoomName, mess }, callback){
 		//проверка на ник нейм 
 		if( !Boolean(socket.username) ) return;

@@ -62,6 +62,7 @@ class Main extends Component {
     });
   }
   componentDidMount(){
+    
     let NameForm = document.forms.NameForm;
     let RoomsForm = document.forms.RoomsForm;
     let setState = this.setState.bind(this);
