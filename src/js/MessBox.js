@@ -5,12 +5,22 @@ class MessBox extends Component {
   constructor(props){
       super(props);
       this.AddMess = this.AddMess.bind(this);
+      this.otherJoin = this.otherJoin.bind(this);
+      this.otherLeave = this.otherLeave.bind(this);
   }
   
   render(){
       return(  
-        <div className='MessBox'  >
-          <div className="d-print-none">{'Имя комнаты '+ this.props.RoomName }</div>
+        <div className='MessBox' >
+          <div className='head'>
+            <button type="button" className="btn btn-danger Leave" >Покинуть</button>
+            <button type="button" className="btn btn-outline-secondary Invite" >Пригласить</button> 
+          </div>
+          <div>
+            <button style={{float: 'right', fontSize: '0.8em', padding: '3px 8px 3px 8px'}} type="button" className="btn btn-outline-secondary">Участники</button>
+            <div className="d-print-none">{'Имя комнаты '+ this.props.RoomName }</div>
+            <hr align="center" width="250px" size="5" color="Red" margin='auto'/>
+          </div>
           <div className='MessWindow'></div>
           <form  name="MessForm" >
             <hr align="center" width="250px" size="5" color="Red" margin='auto'/>
@@ -27,7 +37,12 @@ class MessBox extends Component {
   }
   otherJoin( mess ){
     document.querySelector('div.MessWindow').insertAdjacentHTML(
-      'beforeend', '<div class="d-print-none"><strong>'+mess+' вошел в комнату</strong></div>'
+      'beforeend', '<div class="alert alert-info" role="alert"><strong>'+mess+'</strong> вошел в комнату</div>'
+    );
+  }
+  otherLeave( mess ){
+    document.querySelector('div.MessWindow').insertAdjacentHTML(
+      'beforeend', '<div class="alert alert-danger" role="alert"><strong>'+mess+'</strong> покинул комнату</div>'
     );
   }
   componentDidMount(){
@@ -36,6 +51,8 @@ class MessBox extends Component {
     let RoomName = this.props.RoomName;
     let name = this.props.username;
     let AddMess = this.AddMess;
+    
+    console.log(socket)
 
     MessForm.onsubmit = function(event) {
       event.preventDefault();
@@ -50,7 +67,20 @@ class MessBox extends Component {
     }
 
     socket.on('new-mess',(data)=>AddMess(data));
+
     socket.on('JoinRoom',(user)=>this.otherJoin(user));
+    socket.on('LeaveRoom',(user)=>this.otherLeave(user));
+    
+    let DellMessBox = this.props.DellMessBox;
+
+    document.querySelector('button.Leave').onclick = function(){
+      socket.emit('leave-room', RoomName, function(data){
+        console.log(data)
+        if(data.res){
+          DellMessBox(RoomName)
+        } else console.log('Не удалось покинуть комнату')
+      })
+    }
   };
 }
 

@@ -13,11 +13,11 @@ const styles = {
 
 class Main extends Component {
   constructor(props){
-      super(props);
-      this.state = {
-        dialogs: []
-      }
-      
+    super(props);
+    this.state = {
+      dialogs: []
+    }
+    this.DellMessBox = this.DellMessBox.bind(this)
   }
   
   render(){
@@ -40,13 +40,18 @@ class Main extends Component {
                 RoomName = {el.RoomName}
                 socket = {socket}
                 username = {el.username}
-                key={el.RoomName + 'key'}
+                key = {el.RoomName + 'key'}
+                DellMessBox = {this.DellMessBox}
               />))
           }</div>
         </div>  
       )
   }
-  
+  DellMessBox(RoomName){
+    this.setState({
+      dialogs: this.state.dialogs.filter( el => el.RoomName !== RoomName)
+    });
+  }
   componentDidMount(){
     let NameForm = document.forms.NameForm;
     let RoomsForm = document.forms.RoomsForm;
