@@ -1,9 +1,9 @@
 import React from 'react';
-import ForTest from '../src/js/ForTest'
+import ForTest from '../js/ForTest'
 
-import { configure } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-configure({ adapter: new Adapter() });
+// import { configure } from 'enzyme';
+// import Adapter from 'enzyme-adapter-react-16';
+// configure({ adapter: new Adapter() });
 import { shallow, mount, render } from 'enzyme';
 //*******************************************************************************************************
 test('CheckboxWithLabel changes the text after click', () => {
