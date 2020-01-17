@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import '../css/Mess.css'
 
-class MessBox extends Component {
+
+export class MessBox extends Component {
   constructor(props){
       super(props);
       this.AddMess = this.AddMess.bind(this);

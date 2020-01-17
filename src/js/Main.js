@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MessBox from './MessBox'
+//import '../css/Mess.css';
 
 import openSocket from 'socket.io-client';
 const socket = openSocket(document.location.href);

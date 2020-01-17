@@ -1,5 +1,6 @@
-
 import React from 'react';
+
+import '../css/Mess.css'
 
 export default class ForTest extends React.Component {
   constructor(props) {
