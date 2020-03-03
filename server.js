@@ -1,38 +1,11 @@
-import path from 'path'
-import express from 'express'
-import webpack from 'webpack'
-import webpackDevMiddleware from 'webpack-dev-middleware'
-import webpackHotMiddleware from 'webpack-hot-middleware'
-import config from '../../webpack.dev.config.js'
-
-const app = express(),
-      DIST_DIR = __dirname,
-      HTML_FILE = path.join(DIST_DIR, 'index.html'),
-      compiler = webpack(config)
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
       
 const server = require('http').createServer(app);
 
-server.listen(8080, ()=>{
-  console.log('http://localhost:8080');
-});    
-
-
-app.use(webpackDevMiddleware(compiler, {
-  publicPath: config.output.publicPath
-}))
-
-app.use(webpackHotMiddleware(compiler))
-
-app.get('/', (req, res, next) => {
-  compiler.outputFileSystem.readFile(HTML_FILE, (err, result) => {
-		if (err) {
-			return next(err)
-		}
-		res.set('content-type', 'text/html')
-		res.send(result)
-		res.end()
-  })
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const io = require('socket.io').listen(server);
 
@@ -48,8 +21,6 @@ function CreateRoom({name, author}){
 	if( GetRoom(name) !== undefined ) 
 		return { state : false, mess: 'Комната с таким именем уже существует' }
 
-	// по уму нужно хранить все в бд, но в данном примере подразумевается,
-	// что приложение работает в основном синхронно
 	rooms.push(
 		{
 			RoomName : name,
@@ -187,3 +158,7 @@ io.sockets.on('connection', function(socket) {
 	});
 
 });
+
+server.listen(8080, ()=>{
+  console.log('http://localhost:8080');
+});    
