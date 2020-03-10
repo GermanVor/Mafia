@@ -1,38 +1,66 @@
 .MessBox {
+  margin: 30px;
   position: relative;
-  width: 200px;
-  height: 300px;
+  width: 300px;
+  height: 400px;
   border: solid black 2px;
+  padding: 5px;
 }
+
+.MessBox input {
+  height: 100%;
+  padding: 0;
+  font-size: 100%;
+}
+
 .MessBox .head {
   position: relative;
   width: 100%;
-  height: 25%;
+  height: 17%;
 }
 .MessBox .head-1, .head-2 {
   position: relative;
   width: 100%;
-  
+  height: 50%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
-.MessBox .head-1 input {
-  padding: 0;
+.MessBox .head-2 div{
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .MessForm {
   position: relative;
   width: 100%;
-  height: 25%;
+  height: 19%;
 }
 .MessForm textarea {
-  height: 100%;
+  height: 98%;
   width: 98%;
-  margin: 1%;
+  margin: 0;
   border: solid black 1px;
 }
-.MessBox .MessWindow {
+.MessWindow {
   position: relative;
   box-sizing: border-box;
   overflow-y:auto;
-  height: 50%;
+  height: 60%;
+  margin: 2% 0;
+  border-top: solid black 1px;
+  border-bottom: solid black 1px;
+}
+.MessWindow div {
+  font-size: 95%;
+}
+.alert-join-room , .alert-leave-room {
+  text-align: center;
+}
+.alert-join-room {
+  background-color: rgba(18, 90, 50, 0.6);
+}
+.alert-leave-room {
+  background-color: rgba(177, 2, 2, 0.6);
 }

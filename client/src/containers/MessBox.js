@@ -94,7 +94,7 @@ export default class MessBox extends Component {
     socket.on('JoinRoom',(user)=>{
       let obj = {
         mess: `${user} вошел в комнату`,
-        className: 'alert alert-info'
+        className: 'alert-join-room'
       };
       this.setState({ Mess: [...this.state.Mess, obj] });
     });
@@ -102,7 +102,7 @@ export default class MessBox extends Component {
     socket.on('LeaveRoom',(user)=>{
       let obj = {
         mess: `${user} покинул комнату`,
-        className: 'alert alert-danger'
+        className: 'alert-leave-room'
       };
       this.setState({ Mess: [...this.state.Mess, obj] });
     });
