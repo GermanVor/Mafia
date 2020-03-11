@@ -58,12 +58,8 @@ export default class MessBox extends Component {
               <input type="button" value='Пригласить'  />
             </div>
             <div className='head-2'>
-              <div>
-                <div >{this.props.RoomName }</div>
-              </div>
-              <div>
-                <input type="button" value='Участники' onClick={this.GetMembers} />
-              </div>
+              <p>{this.props.RoomName }</p>
+              <input type="button" value='Участники' onClick={this.GetMembers} />
             </div>
           </div>
       
