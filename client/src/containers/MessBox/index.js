@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../style/MessBox.css';
+import '../../style/MessBox.css';
 import autoBind from 'react-autobind';
 import MessBoxList from './MessBoxMembers'
 
@@ -58,9 +58,9 @@ export default class MessBox extends Component {
             <input type="button" value='Пригласить'  />
           </div>
           <div className='head-2'>
-            <p>{this.props.RoomName }</p>
             <input type="button" value='Участники' onClick={this.GetMembers} />
             <MessBoxList members={this.state.MembersList} />
+            <p>{this.props.RoomName }</p>
           </div>
         </div>
     
