@@ -25,12 +25,12 @@
   justify-content: space-between;
   align-items: center;
 }
-.MessBox .head-2 div{
+/* .MessBox .head-2 div{
   height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 .MessForm {
   position: relative;
   width: 100%;
@@ -78,8 +78,11 @@
   background: rgba(64,199,129, 1);
   transition: .3s ease-out;
 }
-.MessBox .head-1 input[type="button"]:last-child {
+.MessBox .head input[type="button"]:last-child {
   padding-left: 15%;
+}
+.MessBox .head input[type="button"]:first-child {
+  padding-right: 15%;
 }
 
 .MessBox .head input[type="button"]:hover {

@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import '../style/MessBox.css';
 import autoBind from 'react-autobind';
+import MessBoxList from './MessBoxMembers'
 
 export default class MessBox extends Component {
   constructor(props){
       super(props);
       this.state = {
-        Mess: []
+        Mess: [],
+        MembersList: []
       };
       autoBind(this);
   }
@@ -19,7 +21,6 @@ export default class MessBox extends Component {
       let socket = this.props.socket;
       let RoomName = this.props.RoomName;
 
-      console.log( mess.split('') )
       if( mess !== '' && mess.length <= 100 ){
         socket.emit('mess', { RoomName, mess }, (data)=>{
           if(data.res){
@@ -29,7 +30,6 @@ export default class MessBox extends Component {
       };
       event.target.value = ''; 
     }
-
   }
   LeaveSubmit(event){
     if(event) event.preventDefault();
@@ -40,41 +40,42 @@ export default class MessBox extends Component {
         this.props.DellMessBox(this.props.RoomName);
       } else console.log('Не удалось покинуть комнату')
     });
-
   }
   GetMembers(event){
     if(event) event.preventDefault();
 
     this.props.socket.emit('get-members', this.props.RoomName, (data)=>{
-      console.log(data)
+      this.setState({MembersList: data});
     });
   }
   render(){
-      return(  
-        <div className='MessBox' >
-          <div className='head'>
-            <div className='head-1'>
-              <input type="button" value='Покинуть' onClick={this.LeaveSubmit} />
-              <input type="button" value='Пригласить'  />
-            </div>
-            <div className='head-2'>
-              <p>{this.props.RoomName }</p>
-              <input type="button" value='Участники' onClick={this.GetMembers} />
-            </div>
+    return(  
+      <div className='MessBox' onClick={ ()=>this.setState({ MembersList: [] }) } >
+        {this.state.popup}
+        <div className='head'>
+          <div className='head-1'>
+            <input type="button" value='Покинуть' onClick={this.LeaveSubmit} />
+            <input type="button" value='Пригласить'  />
           </div>
-      
-          <div className='MessWindow'>{this.state.Mess.map( (el, i) =>
-            <div className={'white-space-pre '+ el.className || ''} key={i} >{el.mess}</div>
-          )}</div>
+          <div className='head-2'>
+            <p>{this.props.RoomName }</p>
+            <input type="button" value='Участники' onClick={this.GetMembers} />
+            <MessBoxList members={this.state.MembersList} />
+          </div>
+        </div>
     
-          <div className="MessForm" >
-            <textarea aria-multiline="true" id="message" 
-              placeholder="Введите сообщение" onKeyUp={this.MessFormSubmit}
-              maxLength = "100" >
-            </textarea>
-          </div>
-        </div>  
-      )
+        <div className='MessWindow'>{this.state.Mess.map( (el, i) =>
+          <div className={'white-space-pre '+ el.className || ''} key={i} >{el.mess}</div>
+        )}</div>
+  
+        <div className="MessForm" >
+          <textarea aria-multiline="true" id="message" 
+            placeholder="Введите сообщение" onKeyUp={this.MessFormSubmit}
+            maxLength = "100" >
+          </textarea>
+        </div>
+      </div>  
+    )
   }
   componentDidMount(){
     let socket = this.props.socket;

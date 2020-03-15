@@ -56,12 +56,12 @@ module.exports = (io) => io.sockets.on('connection', function(socket) {
 		//проверка на ник нейм 
 		if( !Boolean(socket.username) ) return;
 		if( GetRoom(RoomName) === undefined ) {
-			CreateRoom(RoomName, socket.username)
+			CreateRoom(RoomName, socket.username);
 			//не хватает всяких обработок ошибок и сообщний , но мне лень 
 			socket.join(RoomName, function(){
 				console.log('Пользователь (id) ' + socket.id + ' создал комнату ' + RoomName);
 				socket.Rooms.push(RoomName);
-				callback({ res: true, mess: 'Комната успешно создана' })
+				callback({ res: true, mess: 'Комната успешно создана' });
 			});
 		}
 		else callback({ res: false, mess: 'Комната с таким именем уже существует' });

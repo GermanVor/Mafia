@@ -1,0 +1,8 @@
+.MessBoxMembers {
+  padding: 5px 10px;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: aquamarine;
+  z-index: 5;
+}
